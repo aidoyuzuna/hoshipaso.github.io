@@ -1,39 +1,42 @@
-name: Deploy to GitHub Pages
+name: Github Pages Astro CI
 
 on:
-  # `main` ブランチにプッシュするたびにワークフローを実行します
-  # 異なるブランチ名を使用する場合は、`main` をブランチ名に置き換えてください
+  # `main`ブランチにプッシュするたびにワークフローを起動させる
+  # 別のブランチ名を使う場合は`main`をあなたのブランチ名で置き換えてください。
   push:
-    branches: [ main ]
-  # このワークフローを GitHub の Actions タブから手動で実行できるようにします。
+    branches: [main]
+  # GitHubのActionsタブから、このワークフローを手動で実行できるようにします。
   workflow_dispatch:
 
-# このジョブがリポジトリをクローンし、ページデプロイメントを作成することを許可します。
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout your repository using git
-        uses: actions/checkout@v4
-      - name: Install, build, and upload your site
-        uses: withastro/action@v1
-        with:
-          path: . # リポジトリ内のAstroプロジェクトのルートロケーション。(オプション)
-          node-version: "20" # サイト構築に使用するNodeのバージョン。デフォルトは18です。（オプション）
-          package-manager: pnpm@latest # 依存関係のインストールとサイトのビルドに使用する Node パッケージマネージャ。ロックファイルに基づいて自動的に検出されます。(オプション)
-
   deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-20.04
+
+    # このジョブがあなたのリポジトリに変更をプッシュすることを許可する
+    permissions:
+      contents: write
+
     steps:
+      - name: Check out your repository using git
+        uses: actions/checkout@v2
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      # npmを使っていない場合、`npm ci`を`yarn install`や`pnpm i`に置き換えてください。
+      - name: Install dependencies
+        run: pnpm i
+
+      # npmを使っていない場合、`npm run build`を`yarn build`や`pnpm run build`に置き換えてください。
+      - name: Build Astro
+        run: pnpm run build
+
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # `./dist`はAstroがデフォルトでアウトプットするディレクトリです。
+          # 変更した場合は、こちらも更新してください。
+          publish_dir: ./dist
