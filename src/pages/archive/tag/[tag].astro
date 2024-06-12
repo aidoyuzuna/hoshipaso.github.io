@@ -8,10 +8,9 @@ import { getSortedPosts } from '@utils/content-utils'
 export async function getStaticPaths() {
   const posts = await getSortedPosts()
 
-  const allTags = posts.reduce((acc, post) => {
-    post.data.tags.forEach(tag => acc.add(tag))
-    return acc
-  }, new Set())
+  const allTags = posts
+    .filter(post => post.data.tags)
+    .map(post => post.data.tags)
 
   const allTagsArray = Array.from(allTags)
 
