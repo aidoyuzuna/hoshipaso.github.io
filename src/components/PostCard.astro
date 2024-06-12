@@ -8,7 +8,7 @@ import PostMetadata from './PostMeta.astro'
 import ImageWrapper from './misc/ImageWrapper.astro'
 
 interface Props {
-  class: string
+  class?: string
   entry: any
   title: string
   url: string
@@ -17,7 +17,7 @@ interface Props {
   category: string
   image: string
   description: string
-  words: number
+  words?: number
   draft: boolean
   style: string
 }

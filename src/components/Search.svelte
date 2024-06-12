@@ -1,8 +1,8 @@
 <script lang="ts">
 import { url } from '@utils/url-utils.ts'
 import { onMount } from 'svelte'
-const keywordDesktop = ''
-const keywordMobile = ''
+let keywordDesktop = ''
+let keywordMobile = ''
 let result = []
 const fakeResult = [
   {
@@ -63,8 +63,6 @@ const togglePanel = () => {
   panel?.classList.toggle('float-panel-closed')
 }
 
-$: search(keywordDesktop, true)
-$: search(keywordMobile, false)
 </script>
 
 <!-- search bar for desktop view -->
