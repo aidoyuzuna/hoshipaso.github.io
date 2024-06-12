@@ -99,7 +99,7 @@ importers:
         specifier: ^3.4.1
         version: 3.4.1
       typescript:
-        specifier: ^5.4.5
+        specifier: 5.4.5
         version: 5.4.5
       unist-util-visit:
         specifier: ^5.0.0
